@@ -1,6 +1,6 @@
 ---
 name: address-review-comments
-description: Use when processing PR review comments - fetches all comments, triages them, presents batch for approval, then fixes code, replies to threads, and resolves conversations
+description: Use when processing PR review comments, after receiving feedback on a pull request that needs to be triaged and addressed
 user_invocable: address-review-comments
 ---
 
@@ -45,7 +45,28 @@ gh api repos/{owner}/{repo}/issues/{pr}/comments --paginate
 - `user.login` (who wrote it)
 - `in_reply_to_id` (to reconstruct threads)
 
-Skip comments authored by the current user or by bots.
+**Filtering rules:**
+- Skip comments authored by the current user (your own replies)
+- Skip administrative bot comments (e.g., "Auto-Review: Escalated", review badge summaries, approval status messages, CI/CD notifications)
+- Do NOT skip bot comments that contain substantive code review feedback (e.g., from Devin, Greptile, CodeRabbit) — triage these the same as human comments
+- The test is whether the comment contains actionable technical feedback about the code vs. bot housekeeping/status noise
+
+**Thread reconstruction:**
+- Group comments by thread using `in_reply_to_id` (comments sharing the same root form one thread)
+- Triage the thread as a unit, not individual replies — read the full conversation to understand current state
+- If the reviewer's concern was already resolved in the thread (e.g., they replied "looks good" or "never mind"), categorize as Already Addressed
+- If the thread shows ongoing disagreement, triage based on the reviewer's latest position
+- Only the root comment of a thread needs a reply and resolution — don't reply to intermediate messages
+
+**Review summaries (top-level review bodies):**
+- Reviews from `/reviews` contain a `body` (overall summary) and `state` (APPROVED, CHANGES_REQUESTED, COMMENTED)
+- These have no file/line reference and no thread to resolve
+- If the review body contains actionable feedback, triage it alongside inline comments
+- If the review body is empty or just approval text, skip it
+- To reply to review-level feedback, use a general PR comment:
+  ```bash
+  gh api repos/{owner}/{repo}/issues/{pr}/comments -f body="Response text"
+  ```
 
 ## Step 3: Triage
 
@@ -99,13 +120,18 @@ Anything you want to change before I proceed?
 
 ## Step 5: Execute
 
-After approval, process all items in one pass:
+After approval, process all items in one pass.
+
+**Fix ordering:** When multiple fixes touch the same file, process them bottom-to-top (highest line number first). This prevents earlier fixes from shifting the line numbers of later fixes.
 
 ### Fix Items
 
 For each:
 1. Implement the fix
 2. Run tests to verify no regressions
+   - If the fix caused the failure: revise the fix until tests pass before proceeding
+   - If pre-existing failure: note it as a caveat, continue with other fixes
+   - Never reply "Fixed" to a thread if the fix introduced test failures
 3. Reply in the comment thread:
    ```bash
    gh api repos/{owner}/{repo}/pulls/{pr}/comments/{comment_id}/replies \
@@ -141,10 +167,13 @@ For each:
 ## Step 6: Push
 
 ```bash
-git add -A
+# Stage only the files you modified during fixes — NOT git add -A
+git add <files changed during fix execution>
 git commit -m "fix: address PR review feedback"
 git push
 ```
+
+Do not use `git add -A` or `git add .` — these can stage secrets, build artifacts, or unrelated changes. Track which files each fix touched and stage them by name.
 
 Report summary: "N fixed, N pushed back, N already addressed. Pushed."
 
