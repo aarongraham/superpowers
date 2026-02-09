@@ -1,6 +1,6 @@
 ---
 name: dispatching-parallel-agents
-description: Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies
+description: Use when facing 2+ independent subagent tasks (Task tool) that can be worked on without shared state or sequential dependencies — NOT for agent teams with TeamCreate
 ---
 
 # Dispatching Parallel Agents
@@ -38,6 +38,8 @@ digraph when_to_use {
 - No shared state between investigations
 
 **Don't use when:**
+- User asks for an "agent team" or persistent teammates that communicate with each other — use `superpowers:planning-agent-teams` instead
+- Task needs TeamCreate, SendMessage, or shared task lists — that's agent teams, not subagents
 - Failures are related (fix one might fix others)
 - Need to understand full system state
 - Agents would interfere with each other
