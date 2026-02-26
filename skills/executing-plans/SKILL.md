@@ -11,6 +11,10 @@ Load plan, review critically, execute tasks in batches, report for review betwee
 
 **Core principle:** Batch execution with checkpoints for architect review.
 
+<HARD-GATE>
+This skill MUST be dispatched to a sub-agent using Sonnet 4.6 (`model: "sonnet"`). Do NOT execute this skill inline — always use the Task tool with `subagent_type: "general-purpose"` and `model: "sonnet"`. This applies regardless of what model the current conversation is using.
+</HARD-GATE>
+
 **Announce at start:** "I'm using the executing-plans skill to implement this plan."
 
 ## The Process

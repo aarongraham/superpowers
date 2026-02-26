@@ -31,7 +31,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
+> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Dispatch as a sub-agent with `model: "sonnet"` (Sonnet 4.6).
 
 **Goal:** [One sentence describing what this builds]
 
