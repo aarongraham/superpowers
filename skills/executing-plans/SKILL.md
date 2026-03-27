@@ -9,10 +9,6 @@ description: Use when you have a written implementation plan to execute in a sep
 
 Load plan, review critically, execute all tasks, report when complete.
 
-<HARD-GATE>
-This skill MUST be dispatched to a sub-agent using Sonnet 4.6 (`model: "sonnet"`). Do NOT execute this skill inline — always use the Task tool with `subagent_type: "general-purpose"` and `model: "sonnet"`. This applies regardless of what model the current conversation is using.
-</HARD-GATE>
-
 **Announce at start:** "I'm using the executing-plans skill to implement this plan."
 
 **Note:** Tell your human partner that Superpowers works much better with access to subagents. The quality of its work will be significantly higher if run on a platform with subagent support (such as Claude Code or Codex). If subagents are available, use superpowers:subagent-driven-development instead of this skill.
