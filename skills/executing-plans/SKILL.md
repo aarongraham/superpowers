@@ -7,15 +7,15 @@ description: Use when you have a written implementation plan to execute in a sep
 
 ## Overview
 
-Load plan, review critically, execute tasks in batches, report for review between batches.
-
-**Core principle:** Batch execution with checkpoints for architect review.
+Load plan, review critically, execute all tasks, report when complete.
 
 <HARD-GATE>
 This skill MUST be dispatched to a sub-agent using Sonnet 4.6 (`model: "sonnet"`). Do NOT execute this skill inline — always use the Task tool with `subagent_type: "general-purpose"` and `model: "sonnet"`. This applies regardless of what model the current conversation is using.
 </HARD-GATE>
 
 **Announce at start:** "I'm using the executing-plans skill to implement this plan."
+
+**Note:** Tell your human partner that Superpowers works much better with access to subagents. The quality of its work will be significantly higher if run on a platform with subagent support (such as Claude Code or Codex). If subagents are available, use superpowers:subagent-driven-development instead of this skill.
 
 ## The Process
 
@@ -25,24 +25,15 @@ This skill MUST be dispatched to a sub-agent using Sonnet 4.6 (`model: "sonnet"`
 3. If concerns: Raise them with your human partner before starting
 4. If no concerns: Create TodoWrite and proceed
 
-### Step 2: Execute All Tasks
+### Step 2: Execute Tasks
 
 For each task:
 1. Mark as in_progress
 2. Follow each step exactly (plan has bite-sized steps)
 3. Run verifications as specified
 4. Mark as completed
-5. Continue to next task immediately
 
-**Do not stop for feedback between tasks.** Execute the entire plan.
-
-### Step 3: Report Completion
-When all tasks complete:
-- Show summary of what was implemented
-- Show final verification output
-- Report any issues encountered during execution
-
-### Step 4: Complete Development
+### Step 3: Complete Development
 
 After all tasks complete and verified:
 - Announce: "I'm using the finishing-a-development-branch skill to complete this work."
@@ -72,8 +63,7 @@ After all tasks complete and verified:
 - Follow plan steps exactly
 - Don't skip verifications
 - Reference skills when plan says to
-- Execute entire plan without stopping
-- Stop only when blocked, don't guess
+- Stop when blocked, don't guess
 - Never start implementation on main/master branch without explicit user consent
 
 ## Integration

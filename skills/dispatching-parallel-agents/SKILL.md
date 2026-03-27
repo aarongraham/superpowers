@@ -1,11 +1,13 @@
 ---
 name: dispatching-parallel-agents
-description: Use when facing 2+ independent subagent tasks (Task tool) that can be worked on without shared state or sequential dependencies — NOT for agent teams with TeamCreate
+description: Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies
 ---
 
 # Dispatching Parallel Agents
 
 ## Overview
+
+You delegate tasks to specialized agents with isolated context. By precisely crafting their instructions and context, you ensure they stay focused and succeed at their task. They should never inherit your session's context or history — you construct exactly what they need. This also preserves your own context for coordination work.
 
 When you have multiple unrelated failures (different test files, different subsystems, different bugs), investigating them sequentially wastes time. Each investigation is independent and can happen in parallel.
 
@@ -38,8 +40,6 @@ digraph when_to_use {
 - No shared state between investigations
 
 **Don't use when:**
-- User asks for an "agent team" or persistent teammates that communicate with each other — use `superpowers:planning-agent-teams` instead
-- Task needs TeamCreate, SendMessage, or shared task lists — that's agent teams, not subagents
 - Failures are related (fix one might fix others)
 - Need to understand full system state
 - Agents would interfere with each other
