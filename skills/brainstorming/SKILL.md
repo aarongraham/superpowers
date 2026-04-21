@@ -17,6 +17,21 @@ Do NOT invoke any implementation skill, write any code, scaffold any project, or
 
 Every project goes through this process. A todo list, a single-function utility, a config change — all of them. "Simple" projects are where unexamined assumptions cause the most wasted work. The design can be short (a few sentences for truly simple projects), but you MUST present it and get approval.
 
+## Pipeline Mode
+
+Some callers orchestrate their own multi-phase flow (e.g., a ticket pipeline) and need brainstorming to return control rather than auto-invoke `writing-plans`. These callers will explicitly announce **pipeline mode** when invoking you, and will provide:
+
+- A specific path for the design doc (overriding the default `docs/plans/YYYY-MM-DD-<topic>-design.md`).
+- An instruction to return control after the user approves the spec — do NOT invoke `writing-plans`.
+
+In pipeline mode:
+
+- Run the full brainstorming process including the design-approval gate, spec write, self-review, and user spec-review gate. **None of the gates relax.**
+- Save the design to the path the caller specified.
+- After the user approves the written spec, STOP. Report "Brainstorming complete in pipeline mode — returning to caller" with the path to the design doc. Do NOT invoke `writing-plans` or any other skill.
+
+The caller is responsible for the next phase. If the caller did NOT announce pipeline mode, the default flow applies: invoke `writing-plans` as the terminal step.
+
 ## Checklist
 
 You MUST create a task for each of these items and complete them in order:
@@ -63,7 +78,7 @@ digraph brainstorming {
 }
 ```
 
-**The terminal state is invoking writing-plans.** Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans.
+**The default terminal state is invoking writing-plans.** Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans. **Exception:** in Pipeline Mode (see section above), return control to the caller after spec approval instead.
 
 ## The Process
 
@@ -133,6 +148,7 @@ Wait for the user's response. If they request changes, make them and re-run the 
 
 - Invoke the writing-plans skill to create a detailed implementation plan
 - Do NOT invoke any other skill. writing-plans is the next step.
+- **Pipeline mode exception:** if the caller announced pipeline mode, STOP here and return control to the caller instead of invoking writing-plans. See the Pipeline Mode section above.
 
 ## Key Principles
 

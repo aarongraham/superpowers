@@ -18,6 +18,21 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 **Save plans to:** `docs/plans/YYYY-MM-DD-<feature-name>.md`
 - (User preferences for plan location override this default)
 
+## Pipeline Mode
+
+Some callers orchestrate their own multi-phase flow (e.g., a ticket pipeline) and need writing-plans to return control rather than auto-invoke `subagent-driven-development`. These callers will explicitly announce **pipeline mode** when invoking you, and will provide:
+
+- A specific path for the plan (overriding the default `docs/plans/YYYY-MM-DD-<feature-name>.md`).
+- An instruction to return control after the plan is written and self-reviewed — do NOT invoke `subagent-driven-development` or `executing-plans`.
+
+In pipeline mode:
+
+- Produce the plan per the normal process and save it to the path the caller specified.
+- Run the self-review.
+- After the self-review, STOP. Report "Writing-plans complete in pipeline mode — returning to caller" with the path to the plan. Do NOT invoke the next skill.
+
+The caller is responsible for the next phase. If the caller did NOT announce pipeline mode, the default Execution Handoff applies.
+
 ## Scope Check
 
 If the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming. If it wasn't, suggest breaking this into separate plans — one per subsystem. Each plan should produce working, testable software on its own.
@@ -140,3 +155,5 @@ After saving the plan, proceed directly to subagent-driven execution:
 - **REQUIRED SUB-SKILL:** Use superpowers:subagent-driven-development
 - Stay in this session
 - Fresh subagent per task + code review
+
+**Pipeline mode exception:** if the caller announced pipeline mode, STOP here and return control to the caller instead of invoking subagent-driven-development. See the Pipeline Mode section above.
